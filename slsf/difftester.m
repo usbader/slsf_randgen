@@ -84,13 +84,16 @@ classdef difftester < handle
                 return;
             end
             
-            emi_tester = emitester(obj.sys, obj.my_result);
-            sim_data = emi_tester.go(obj);
+            %if ~ obj.my_result.is_valid_and_ok(singleresult.NORMAL_SIGLOG) || ~ obj.my_result.is_valid_and_ok(singleresult.ACC) || ~ obj.my_result.is_valid_and_ok(singleresult.RACC) 
+             emi_tester = emitester(obj.sys, obj.my_result);
+             sim_data = emi_tester.go(obj);
             
-            for i = 1:sim_data.len
+             for i = 1:sim_data.len
                 obj.simulation_data{obj.get_num_of_non_emi_simulations() + i} = sim_data.get(i);
-            end
-            
+             end
+            %else
+             %   fprintf('/n Invalid Model/n');
+            %end
         end
         
         
@@ -107,15 +110,15 @@ classdef difftester < handle
                 return;
             end
             
-            % TODO manually choosing which comparator to use
-            if obj.logging_method_siglog
-                obj.comp_tester = comparator(obj.my_result, obj.simulation_data, try_count);
-                obj.comp_tester.max_log_len_mismatch_allowed = obj.num_log_len_mismatch;
-            else
-                obj.comp_tester = outport_comparator(obj.my_result, obj.simulation_data, try_count);
-            end
+             %TODO manually choosing which comparator to use
+             if obj.logging_method_siglog
+                 obj.comp_tester = comparator(obj.my_result, obj.simulation_data, try_count);
+                 obj.comp_tester.max_log_len_mismatch_allowed = obj.num_log_len_mismatch;
+             else
+                 obj.comp_tester = outport_comparator(obj.my_result, obj.simulation_data, try_count);
+             end
             
-            ret = obj.comp_tester.compare();
+             ret = obj.comp_tester.compare();
             
             obj.my_result.store_runtime(singleresult.COMPARISON);
         end
@@ -207,7 +210,7 @@ classdef difftester < handle
                     delete([obj.sys '_acc*']);
                     
                     try
-                        rmdir('slprj', 's');
+                         rmdir('slprj', 's');
                     catch me
                         fprintf('rmdir failure: directory not removed: %s\n', me.identifier);
                     end

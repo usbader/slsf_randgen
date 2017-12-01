@@ -39,11 +39,15 @@ classdef comparator < handle
         
         function ret = final_val_compare(obj)
             ret = true;
-            f = obj.refined_data{1};                    % First Simulation Trace
+            f = obj.refined_data{3};                    % First Simulation Trace
             blocks = fieldnames(f);
             
-            for i = 2: numel(obj.refined_data)
-                fprintf('Comparing Simulation Number %d with %d\n', i, 1);
+            for i = 1: numel(obj.refined_data)
+                fprintf('Comparing Simulation Number %d with %d\n', i, 3);
+                
+                if (i==3)
+                    continue;
+                end
                 
                 for j = 1 : numel(blocks)
                     bl_name = blocks{j};
@@ -154,8 +158,10 @@ classdef comparator < handle
         
         function obj = log_all(obj)
             
-            f = obj.refined_data{1};                    % First Simulation Trace
+            f = obj.refined_data{3};                    % First Simulation Trace
             blocks = fieldnames(f);
+            fprintf('Number of simulations %d\n', numel(obj.refined_data));
+            
             
             num_cols = numel(obj.refined_data);
             
@@ -169,6 +175,7 @@ classdef comparator < handle
                     
 %                     bl_index = strsplit(bl_name, '_bl');
 %                     bl_index = str2double(bl_index(2));
+
                     
                     data_2 = obj.refined_data{i}.(bl_name);
                     
@@ -192,4 +199,7 @@ classdef comparator < handle
     end
     
 end
+
+
+
 

@@ -5,7 +5,7 @@ classdef cfg
     %   understand various "phases" of experiment.
     
     properties(Constant = true)
-        NUM_TESTS = 1;                                % Number of random models to generate (and use in differntial testing)
+        NUM_TESTS = 10;                                % Number of random models to generate (and use in differntial testing)
         CSMITH_CREATE_C = false;                % Whether to call Csmith to create C files. Set to False if reproducing previous experiment.
         
         SIMULATE_MODELS = true;                 % To invoke "Analyze Model" and "Fix Errors" phase 
@@ -20,9 +20,9 @@ classdef cfg
 %          generating model will use this particular model for further
 %          phases of CyFuzz
 
-        LOAD_RNG_STATE = false;                  % Set this `true` if we want to create NEW models each time the script is run. Set to `false` if generating same models at each run of the script is desired. For first time running in a new computer set to false, as this will fail first time if set to true.
+        LOAD_RNG_STATE = true;                  % Set this `true` if we want to create NEW models each time the script is run. Set to `false` if generating same models at each run of the script is desired. For first time running in a new computer set to false, as this will fail first time if set to true.
 
-        SKIP_IF_LAST_CRASHED = false;            % Skip one model if last time Matlab crashed trying to run the same model.
+        SKIP_IF_LAST_CRASHED = true;            % Skip one model if last time Matlab crashed trying to run the same model.
         
         STOP_IF_ERROR = false;                  % Stop the script when meet the first simulation error
         STOP_IF_OTHER_ERROR = true;             % Stop the script for errors not related to simulation e.g. unhandled exceptions or code bug. ALWAYS KEEP IT TRUE to detect my own bugs.
@@ -40,7 +40,7 @@ classdef cfg
         SUBSYSTEM_NUM_BLOCKS = [20 30];
         IF_ACTION_SUBSYS_NUM_BLOCKS = [5 15];
         
-        MAX_HIERARCHY_LEVELS =1;               % Minimum value is 1 indicating a flat model with no hierarchy.
+        MAX_HIERARCHY_LEVELS =2;               % Minimum value is 1 indicating a flat model with no hierarchy.
 
         SAVE_ALL_ERR_MODELS = true;             % Save the models which we can not simulate 
         LOG_ERR_MODEL_NAMES = true;             % Log error model names keyed by their errors
@@ -65,10 +65,13 @@ classdef cfg
         % library, set `is_blk` false. Set true for blocks.
         
         SL_BLOCKLIBS = {
-           struct('name', 'Discrete', 'is_blk', false, 'num', 0.3)
-            struct('name', 'Continuous', 'is_blk', false,  'num', 0.29)
+            struct('name', 'Discrete', 'is_blk', false, 'num', 0.3)
+            %struct('name', 'Continuous', 'is_blk', false,  'num', 0.29)
             struct('name', 'Sinks', 'is_blk', false, 'num', 0.2)
             struct('name', 'Sources', 'is_blk', false, 'num', 0.2)
+            %struct('name', 'Logic and Bit Operations', 'is_blk', false, 'num', 0.29)
+            struct('name', 'simulink/Ports & Subsystems/If', 'is_blk', true, 'num', 0.05)
+            
          %   struct('name', 'simulink/Ports & Subsystems/Subsystem', 'is_blk', true, 'num', 0.05)
          %   struct('name', 'simulink/Ports & Subsystems/Model', 'is_blk', true, 'num', 0.05)
         };
@@ -123,7 +126,8 @@ classdef cfg
         % EMI Related
         
         EMI_TESTING = true;
-        NUM_STATIC_EMI_VARS = 3;
+        NUM_STATIC_EMI_VARS = 1;
+        NUM_DYNAMIC_EMI_VARS = 1;
 
         % Debugging Related
         
