@@ -17,13 +17,24 @@ classdef dynamic_emigen < handle
             ret = obj.sys; %TODO: right now just passes itself. Not creating any different model
         end  
         
+        function compile(obj) 
+                eval([obj.sys '([],[],[], ''compile'')']);
+        end
+        
+        function terminate(obj)
+               eval([obj.sys '([],[],[], ''term'')']);
+        end
 
         function ret = prune_deadBlocks(obj, deadBlocks)      
              % newObj = obj;
+             %   save_system(obj.sys, strcat('/home/cyfuzz/workspace/slsf_randgen/slsf/',obj.sys,'_originalModel.slx'));
               open_system(obj.sys);
+              
+             %  compile(obj);
+              
+              
               blks = find_system(obj.sys, 'Type', 'block');
               listblks = get_param(blks, 'BlockType') ;
-
 
 
               for j = 1:length(deadBlocks) 
@@ -33,7 +44,6 @@ classdef dynamic_emigen < handle
                    lines = get_param(blks(i),'PortConnectivity');
                    disp(numel(lines));
                    disp(lines);
-                   %fprintf('yaaaaaaaaaay\n');
                    %Get port handles
                    portHandles = get_param(handle,'PortHandles');
                    disp(portHandles);
@@ -47,9 +57,26 @@ classdef dynamic_emigen < handle
                        display(srcSignal);
                        display(srcBlockHandle);
                        display(dstBlockHandle);
-                       delete_line(srcSignal);
+                       
+                    
+                       eval([obj.sys, '([],[],[],''compile'');'])
+                       port = get(srcPort);
+                 
+                       disp(port);
+                       disp(port.PortType);
+                           
+                        eval([obj.sys, '([],[],[],''term'');'])
+                       
+                       display(obj.sys);
+                     
+                                           
+                       
                        %Get Destination port
+                       fprintf('porthandles,Outport:\n');
                        disp(size(portHandles.Outport));
+                       
+                        delete_line(srcSignal);
+                      
                        for outportHandle=1:numel(portHandles.Outport)
                        
                        destSignal = get_param(portHandles.Outport(outportHandle),'Line');
@@ -62,6 +89,7 @@ classdef dynamic_emigen < handle
                        lastElementDstPort = destPort(end);
                        %Remove
                        delete_line(destSignal);
+                       
                        %Reconnect
                        add_line(obj.sys,srcPort,lastElementDstPort)
                        newPortHandles = get_param(srcBlockHandle,'PortHandles');
@@ -93,6 +121,13 @@ classdef dynamic_emigen < handle
             end
             disp('count in dynamic:');
             disp(counter);
+            if(cfg.SAVE_EMI_VAR == true)
+              %      save_system(obj.sys, '/home/cyfuzz/workspace/slsf_randgen/slsf/EMI_VAR.slx');
+           save_system(obj.sys, strcat('/home/cyfuzz/workspace/slsf_randgen/slsf/',obj.sys,'_EMI_Var.slx'));
+           
+        %   terminate(obj);
+                
+            end
             ret = obj; 
         end
        

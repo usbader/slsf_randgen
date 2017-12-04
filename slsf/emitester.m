@@ -68,6 +68,7 @@ classdef emitester < handle
                 try
                     obj.simulation_data.add(obj.get_simulation_data_for_single_var(single_emi_var, diff_tester));
                 catch e
+                    getReport(e)
                     fatal('Error in simulation data retrieval for EMI variant');
                     e
                 end

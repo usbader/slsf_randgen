@@ -5,7 +5,7 @@ classdef cfg
     %   understand various "phases" of experiment.
     
     properties(Constant = true)
-        NUM_TESTS = 10;                                % Number of random models to generate (and use in differntial testing)
+        NUM_TESTS = 2;                                % Number of random models to generate (and use in differntial testing)
         CSMITH_CREATE_C = false;                % Whether to call Csmith to create C files. Set to False if reproducing previous experiment.
         
         SIMULATE_MODELS = true;                 % To invoke "Analyze Model" and "Fix Errors" phase 
@@ -20,12 +20,12 @@ classdef cfg
 %          generating model will use this particular model for further
 %          phases of CyFuzz
 
-        LOAD_RNG_STATE = true;                  % Set this `true` if we want to create NEW models each time the script is run. Set to `false` if generating same models at each run of the script is desired. For first time running in a new computer set to false, as this will fail first time if set to true.
+        LOAD_RNG_STATE = false;                  % Set this `true` if we want to create NEW models each time the script is run. Set to `false` if generating same models at each run of the script is desired. For first time running in a new computer set to false, as this will fail first time if set to true.
 
         SKIP_IF_LAST_CRASHED = true;            % Skip one model if last time Matlab crashed trying to run the same model.
         
         STOP_IF_ERROR = false;                  % Stop the script when meet the first simulation error
-        STOP_IF_OTHER_ERROR = true;             % Stop the script for errors not related to simulation e.g. unhandled exceptions or code bug. ALWAYS KEEP IT TRUE to detect my own bugs.
+        STOP_IF_OTHER_ERROR = false;             % Stop the script for errors not related to simulation e.g. unhandled exceptions or code bug. ALWAYS KEEP IT TRUE to detect my own bugs.
 
         CLOSE_MODEL = true;                    % Close models after experiment
         CLOSE_OK_MODELS = true;                % Close "OK" models (refer to CyPhy paper)
@@ -128,6 +128,7 @@ classdef cfg
         EMI_TESTING = true;
         NUM_STATIC_EMI_VARS = 1;
         NUM_DYNAMIC_EMI_VARS = 1;
+        SAVE_EMI_VAR = true;
 
         % Debugging Related
         
